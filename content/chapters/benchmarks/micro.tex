@@ -1,7 +1,7 @@
 \section{Micro-benchmarking: Analisi dei Connettori Interni}
 \label{sec:micro-benchmark}
 
-L'architettura della libreria \texttt{goccia} fonda la propria efficienza sulla minimizzazione della latenza nel trasferimento dei messaggi tra gli stadi della pipeline. Poiché il tempo di elaborazione della logica di business all'interno di uno stage ($T_{process}$) è indipendente dall'infrastruttura di trasporto, l'ottimizzazione delle prestazioni complessive dipende strettamente dalla riduzione del tempo di attraversamento del connettore ($T_{transfer}$). In questa sezione viene presentata un'analisi quantitativa volta a dimostrare il vantaggio prestazionale dei \textit{ring buffer} lock-free implementati rispetto alle primitive native del linguaggio Go (channel), a parità di semantica di comunicazione.
+L'architettura della libreria \textbf{Goccia} fonda la propria efficienza sulla minimizzazione della latenza nel trasferimento dei messaggi tra gli stadi della pipeline. Poiché il tempo di elaborazione della logica di business all'interno di uno stage ($T_{process}$) è indipendente dall'infrastruttura di trasporto, l'ottimizzazione delle prestazioni complessive dipende strettamente dalla riduzione del tempo di attraversamento del connettore ($T_{transfer}$). In questa sezione viene presentata un'analisi quantitativa volta a dimostrare il vantaggio prestazionale dei \textit{ring buffer} lock-free implementati rispetto alle primitive native del linguaggio Go (channel), a parità di semantica di comunicazione.
 
 \subsection{Metodologia e setup sperimentale}
 
@@ -9,7 +9,7 @@ Il benchmark è stato progettato per isolare il costo computazionale delle opera
 
 \begin{itemize}
     \item \textbf{Baseline:} Un wrapper attorno a un \texttt{chan int} bufferizzato standard del linguaggio Go, che utilizza mutex interni gestiti dal runtime per la sincronizzazione delle goroutine.
-    \item \textbf{RingBuffer:} L'implementazione della libreria Goccia ottimizzata nelle varianti \textbf{SPSC} (\textit{Single Producer Single Consumer}), \textbf{SPMC} (\textit{Single Producer Multiple Consumer}) e \textbf{MPSC} (\textit{Multiple Producer Single Consumer}), caratterizzata dall'uso di operazioni atomiche e padding delle cache-line per evitare il \textit{false sharing}.
+    \item \textbf{RingBuffer:} L'implementazione della libreria \textbf{Goccia} ottimizzata nelle varianti \textbf{SPSC} (\textit{Single Producer Single Consumer}), \textbf{SPMC} (\textit{Single Producer Multiple Consumer}) e \textbf{MPSC} (\textit{Multiple Producer Single Consumer}), caratterizzata dall'uso di operazioni atomiche e padding delle cache-line per evitare il \textit{false sharing}.
 \end{itemize}
 
 Qui sotto viene riportata l'implementazione della Baseline:
@@ -47,7 +47,7 @@ La valutazione si articola in due scenari di carico:
     \item \textbf{Contention:} Valuta il comportamento sotto stress concorrente, variando il numero di produttori o consumatori (da 1 a 16 goroutine) per sollecitare i meccanismi di sincronizzazione e lo scheduler del sistema operativo.
 \end{itemize}
 
-Il codice sorgente completo è disponibile nel repository del progetto sotto il package \texttt{internal/rb} \cite{goccia:rb:benchmark}. Per replicare i benchmark e verificare i risultati presentati, è possibile utilizzare il toolchain standard del Go lanciando il seguente comando dalla directory di root del progetto:
+Il codice sorgente completo è disponibile nel repository del progetto sotto il package \texttt{internal/rb} ~\cite{goccia:rb:benchmark}. Per replicare i benchmark e verificare i risultati presentati, è possibile utilizzare il toolchain standard del Go lanciando il seguente comando dalla directory di root del progetto:
 
 \begin{lstlisting}[language=Bash, caption={Comando per l'esecuzione dei benchmark}]
 go test -bench=. -benchmem ./internal/rb
@@ -78,7 +78,7 @@ L'analisi dei dati di contesa evidenzia tre dinamiche fondamentali:
 
 \subsection{Discussione architetturale}
 
-La superiorità prestazionale dei ring buffer di \texttt{goccia} rispetto ai canali Go valida le scelte progettuali descritte nel Capitolo 4. Due fattori tecnici principali giustificano questi risultati:
+La superiorità prestazionale dei ring buffer di \textbf{Goccia} rispetto ai canali Go valida le scelte progettuali descritte nel Capitolo 4. Due fattori tecnici principali giustificano questi risultati:
 
 \begin{itemize}
     \item \textbf{Assenza di Lock (Lock-freedom):} L'utilizzo di operazioni atomiche per l'aggiornamento degli indici di testa e coda elimina la necessità di sospendere le goroutine tramite mutex, riducendo drasticamente il costo del \textit{context switch}.

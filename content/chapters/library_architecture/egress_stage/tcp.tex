@@ -6,7 +6,7 @@ La configurazione dello \textit{TCP Egress stage} è simile a quella dello \text
 
 Contrariamente a \textit{UDP} (\textit{best-effort}), \textit{TCP} garantisce che ogni byte trasmesso arriverà al destinatario nell'ordine esatto, oppure che un errore sia riportato. Se la connessione si interrompe o il destinatario non legge i dati entro il timeout configurato, il \textit{worker} registra un errore e la metrica \texttt{delivering\_errors} è incrementata.
 
-Il \textit{worker} dello \textit{stage} estrae il payload serializzato dal messaggio in input e lo trasmette tramite \texttt{conn.Write}\cite{go:net:tcpconn:write} come sequenza continua di byte, senza delimitatori impliciti: se il messaggio necessita di delimitazione (ad esempio, newline), deve essere già incluso nel payload serializzato dallo \textit{stage} precedente.
+Il \textit{worker} dello \textit{stage} estrae il payload serializzato dal messaggio in input e lo trasmette tramite \texttt{conn.Write}~\cite{go:net:tcpconn:write} come sequenza continua di byte, senza delimitatori impliciti: se il messaggio necessita di delimitazione (ad esempio, newline), deve essere già incluso nel payload serializzato dallo \textit{stage} precedente.
 
 Il \textit{TCP Egress stage} supporta solamente la \textit{Single Worker Mode}, in quanto, sebbene il metodo \texttt{conn.Write} possa essere chiamato da goroutine differenti in maniera sicura, il contenuto dei dati trasmessi potrebbe intervallarsi. Per esempio, se una goroutine scrivesse ``hello'' e un'altra ``word'', il dato trasmesso potrebbe essere una sequenza del tipo ``heworldllo''.
 

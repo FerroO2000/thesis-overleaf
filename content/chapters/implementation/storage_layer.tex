@@ -34,7 +34,7 @@ In questo modo, l’organizzazione dei dati in QuestDB risulta sia normalizzata 
 
 \subsubsection{Throughput, partizionamento e retention}
 
-Dal punto di vista prestazionale, QuestDB è dimensionato per gestire senza difficoltà il volume di dati generato dai due bus CAN del prototipo SquadraCorse. La documentazione ufficiale e benchmark indipendenti riportano capacità di ingest nell’ordine dei milioni di record al secondo su hardware moderno, valori ben superiori al carico previsto in questa applicazione.\cite{questdb:architecture}\cite{questdb:benchmark}\cite{griddb:benchmark}
+Dal punto di vista prestazionale, QuestDB è dimensionato per gestire senza difficoltà il volume di dati generato dai due bus CAN del prototipo SquadraCorse. La documentazione ufficiale e benchmark indipendenti riportano capacità di ingest nell’ordine dei milioni di record al secondo su hardware moderno, valori ben superiori al carico previsto in questa applicazione.~\cite{questdb:architecture}~\cite{questdb:benchmark}~\cite{griddb:benchmark}
 
 La strategia di partizionamento temporale adottata (tipicamente per giorno) consente di implementare in modo semplice politiche di retention basate su orizzonti temporali, eliminando intere partizioni in un’unica operazione, e al tempo stesso riduce la quantità di dati che devono essere scansionati dalle query, che nella pratica si concentrano spesso su singole sessioni di test o giornate di prove. Ne risulta una migliore località dei dati su disco, con effetti positivi sulle latenze di interrogazione.
 

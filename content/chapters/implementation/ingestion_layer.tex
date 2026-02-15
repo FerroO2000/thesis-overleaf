@@ -1,13 +1,13 @@
 \section{Ingestion Layer}
 \label{sec:ingestion-layer}
 
-Il \textit{Livello di acquisizione dati} comprende tutti i componenti responsabili di ricevere i messaggi provenienti dall’auto, tramite la rete 5G e la VPN Tailscale, e di recapitarli ai container di telemetria basati su Goccia.
+Il \textit{Livello di acquisizione dati} comprende tutti i componenti responsabili di ricevere i messaggi provenienti dall’auto, tramite la rete 5G e la VPN Tailscale, e di recapitarli ai container di telemetria basati su \textbf{Goccia}.
 
 \subsubsection{Connettività Tailscale}
 
 Il container \texttt{tailscale} stabilisce una rete privata virtuale basata su WireGuard fra il gateway 5G a bordo vettura e il server di telemetria. Una volta stabilita la VPN, i datagrammi UDP generati dal gateway vengono incapsulati nel tunnel Tailscale e consegnati all’istanza \texttt{tailscale} in esecuzione sul server, la quale li rende disponibili agli altri servizi Docker.
 
-Il reale mittente dei pacchetti è una PCB custom sviluppata internamente al team \cite{scanner:github} che si occupa dell’effettiva lettura dei due bus CAN ed effettua l’incapsulamento secondo il protocollo Cannelloni. Questa scheda è programmata, lato firmware, per inviare i datagrammi UDP verso un unico indirizzo IP, ma su due porte diverse, una per ciascuna linea CAN.
+Il reale mittente dei pacchetti è una PCB custom sviluppata internamente al team ~\cite{scanner:github} che si occupa dell’effettiva lettura dei due bus CAN ed effettua l’incapsulamento secondo il protocollo Cannelloni. Questa scheda è programmata, lato firmware, per inviare i datagrammi UDP verso un unico indirizzo IP, ma su due porte diverse, una per ciascuna linea CAN.
 
 Per poter trasmettere i dati fino al server in sicurezza, il gateway (basato su OpenWRT) configura innanzitutto un alias sull’interfaccia LAN (\texttt{br-lan}), in modo da \textit{simulare un host} con indirizzo IP corrispondente alla destinazione attesa dalla PCB. L’alias viene creato come interfaccia \texttt{lan\_alias} di tipo statico, associata a \texttt{br-lan} e configurata con l’indirizzo, ad esempio, \texttt{192.168.10.254/32}.
 

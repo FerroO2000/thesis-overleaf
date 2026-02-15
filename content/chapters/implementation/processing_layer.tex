@@ -1,7 +1,7 @@
 \section{Processing Layer}
 \label{sec:processing-layer}
 
-Il \textit{Livello di elaborazione} è implementato dal servizio denominato \texttt{sc-telemetry}~\cite{sc-telemetry:github}, eseguito in due istanze distinte per i due bus CAN. Ciascuna istanza realizza, tramite la libreria Goccia, una pipeline di elaborazione a sei stadi che parte dai datagrammi UDP incapsulati in Cannelloni e termina con la persistenza dei segnali CAN in QuestDB.
+Il \textit{Livello di elaborazione} è implementato dal servizio denominato \texttt{sc-telemetry}~\cite{sc-telemetry:github}, eseguito in due istanze distinte per i due bus CAN. Ciascuna istanza realizza, tramite la libreria \textbf{Goccia}, una pipeline di elaborazione a sei stadi che parte dai datagrammi UDP incapsulati in Cannelloni e termina con la persistenza dei segnali CAN in QuestDB.
 
 L’immagine \texttt{scomarferro/sc-telemetry}~\cite{sc-telemetry:dockerhub} incapsula in un unico binario Go l’implementazione necessaria per gestire il flusso di dati proveniente dal veicolo. In fase di avvio, il servizio carica la configurazione leggendo un file YAML (di default \texttt{/app/config/config.yaml}) e applica eventuali override tramite variabili d’ambiente. Il percorso del file di configurazione può essere modificato impostando la variabile \texttt{CONFIG\_PATH}, mentre ogni campo del file YAML può essere sovrascritto da un corrispondente \textit{environment variable}. Questa strategia consente di mantenere una configurazione di base versionata nel repository e, al contempo, di adattare rapidamente i parametri di runtime al contesto specifico senza ricompilare il binario.
 
