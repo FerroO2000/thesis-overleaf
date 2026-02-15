@@ -1,0 +1,195 @@
+%% TOPTESI DEFAULT FRONTPAGE, IGNORED
+%\ateneo{\thesisuniversity} % university name
+%\logosede[5cm]{\thesisuniversitylogo} % logo, square brackets contain the height
+
+%\titolo{\thesistitle} % title
+%\sottotitolo{Metodo dei satelliti medicei} % subtitle
+
+% place/remove a slash \\ to put the name on the following line or after Master Degree Course
+%\corsodilaurea{\thesiscourse} % course name
+
+
+%~251197 % id number is not needed
+
+%\candidato{\thesiscandidatename~\textsc{\thesiscandidatesurname}} % candidate
+
+% using tabular we can have more than 1 supervisor under the same column
+%\relatore{\tabular{@{}l}%
+%    \xmakefirstuc{\thesissupervisoronetitle}~\thesissupervisoronename~\textsc{\thesissupervisoronesurname}\\[0.4ex]
+%    \xmakefirstuc{\thesissupervisortwotitle}~\thesissupervisortwoname~\textsc{\thesissupervisortwosurname}\\[0.4ex]
+%    \xmakefirstuc{\thesissupervisorthreetitle}~\thesissupervisorthreename~\textsc{\thesissupervisorthreesurname}
+%    \endtabular}
+%\terzorelatore{Name}
+
+% in this way we have Academic Year without stile=classica, so without lines
+%\sedutadilaurea{\textsc{Academic~Year} 2019-2020}% per la laurea magistrale
+% for PoliTo there is only month year
+%\sedutadilaurea{\thesisdate}% per la laurea magistrale
+% PhD
+%\esamedidottorato{Novembre 1610}
+%\ciclodidottorato{XV}
+
+% offset for binding, the smaller the better
+%\setbindingcorrection{3mm}
+
+
+%\iflanguage{english}{%
+	%\retrofrontespizio{This work is subject to the Creative Commons Licence}
+
+%	\CorsoDiLaureaIn{\thesislevel's Degree Course in\space}
+
+%	\TesiDiLaurea{\thesislevel's Degree Thesis}
+
+%	\InName{in}
+%	\CandidateName{\xmakefirstuc{\thesiscandidatetext}}% or Candidates
+%	\AdvisorName{\xmakefirstuc{\thesissupervisortext}}% or Supervisor
+	%\TutorName{Tutor}
+	%\NomeTutoreAziendale{Internship Tutor}
+
+	%\NomePrimoTomo{First volume}
+	%\NomeSecondoTomo{Second Volume}
+	%\NomeTerzoTomo{Third Volume}
+	%\NomeQuartoTomo{Fourth Volume}
+%}{}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={break, case, catch, continue, debugger, default, delete, do, else, finally, for, function, if, in, instanceof, new, return, switch, this, throw, try, typeof, var, void, while, with, const, import, async, await},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  sensitive=true
+}
+
+\lstset{
+   language=JavaScript,
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\lstdefinelanguage{Go}{
+  morekeywords={
+    break, case, chan, const, continue, default, defer, else, 
+    fallthrough, for, func, go, goto, if, import, interface, 
+    map, package, range, return, select, struct, switch, type, 
+    var, append, bool, byte, cap, close, complex, complex64, 
+    complex128, copy, delete, error, false, float32, float64, 
+    imag, int, int8, int16, int32, int64, iota, len, make, 
+    new, nil, panic, print, println, real, recover, rune, 
+    string, true, uint, uint8, uint16, uint32, uint64, uintptr
+  },
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]`
+}
+
+\definecolor{keyword}{RGB}{0, 55, 255}
+
+\lstset{
+  language=Go,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{keyword}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  frame=tb,
+  rulecolor=\color{black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=9pt,
+  captionpos=b,
+  escapeinside={\%*}{*)}
+}
+
+\lstdefinelanguage{SQL}{
+  morekeywords={SELECT, FROM, WHERE, GROUP, BY, ORDER, ASC, DESC, HAVING, 
+    JOIN, INNER, LEFT, RIGHT, FULL, ON, AND, OR, NOT, IS, NULL, LIKE, IN, 
+    BETWEEN, EXISTS, ANY, ALL, DISTINCT, UNION, INTERSECT, EXCEPT, 
+    INSERT, INTO, VALUES, UPDATE, SET, DELETE, CREATE, TABLE, INDEX, 
+    VIEW, TRIGGER, AS, CASE, WHEN, THEN, ELSE, END, CAST, CONVERT, 
+    COUNT, SUM, AVG, MIN, MAX, LIMIT, OFFSET, TOP, FETCH, FIRST, NEXT, 
+    TIMESTAMP, DATE, TIME, INTERVAL, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND,
+    SAMPLE, BY, LATEST, ON, ASOF, PARTITION, DAY, TIMESTAMP},
+  sensitive=false,
+  morecomment=[l]{--},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]`,
+}
+
+\definecolor{sqlkeyword}{RGB}{0, 55, 255}
+
+\lstset{
+  language=SQL,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{sqlkeyword}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  frame=tb,
+  rulecolor=\color{black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=9pt,
+  captionpos=b,
+  escapeinside={\%*}{*)}
+}
+
+\lstdefinelanguage{Bash}{
+  morekeywords={
+    alias, bg, bind, break, builtin, caller, case, cd, command, compgen,
+    complete, continue, declare, dirs, disown, do, done, echo, else, enable,
+    eval, exec, exit, export, false, fc, fg, fi, for, function, getopts,
+    hash, help, history, if, in, jobs, kill, let, local, logout, popd,
+    printf, pushd, pwd, read, readonly, return, set, shift, shopt, source,
+    suspend, test, then, time, times, trap, true, type, typeset, ulimit,
+    umask, unalias, unset, until, wait, while,
+    go, git, docker, make, sudo, apt, yum
+  },
+  sensitive=true,
+  morecomment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]`
+}
+
+\definecolor{bashkeyword}{RGB}{0, 55, 255}
+
+\lstset{
+  language=Bash,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{bashkeyword}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  frame=tb,
+  rulecolor=\color{black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=9pt,
+  captionpos=b,
+  escapeinside={\%*}{*)}
+}
