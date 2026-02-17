@@ -1,0 +1,43 @@
+\chapter{Introduzione}
+\label{sec:introduction}
+
+Negli ultimi anni l'adozione di architetture \emph{event-driven} e di sistemi di \emph{stream processing} ha reso centrale il problema di costruire pipeline di dati in grado di coniugare semplicità d'uso, modularità e prestazioni elevate su architetture multicore.
+In questo contesto, il linguaggio Go offre primitive di concorrenza ad alto livello basate su \emph{goroutine} e \emph{channel}, ma tali astrazioni, pur risultando estremamente espressive, non sempre consentono di sfruttare appieno l'hardware nel caso di applicazioni con requisiti stringenti di throughput e latenza.
+La libreria \textbf{Goccia} nasce con l'obiettivo di colmare questo divario, fornendo una soluzione per la definizione di pipeline concorrenti in Go che integri un modello a stadi chiaro con connettori interni ottimizzati, basati su \emph{ring buffer lock-free} e tecniche di riduzione della contesa in cache, e viene utilizzata all'interno di un sistema reale di telemetria automobilistica sviluppato per SquadraCorse Polito.
+
+\section{Motivazioni}
+
+Molti sistemi moderni di telemetria, osservabilità e \emph{data ingestion} richiedono la gestione continua di flussi di messaggi eterogenei, provenienti da reti veicolari, sensori o microservizi, con vincoli di affidabilità e di latenza \emph{end-to-end} che rendono critico il layer di trasporto e di buffering dei dati.
+L'impiego di primitive generiche per la comunicazione concorrente, come i soli \emph{channel} di Go, può introdurre overhead di sincronizzazione e fenomeni di contesa che, in scenari di traffico elevato o in presenza di più core, rendono il layer di trasporto un potenziale collo di bottiglia rispetto alla logica applicativa.
+Diventa pertanto necessario disporre di una libreria infrastrutturale che esponga un'API di alto livello per la modellazione di pipeline, ma che internamente adotti strutture dati specializzate, come \emph{ring buffer lock-free}, per ridurre al minimo le penalità introdotte dalla sincronizzazione, cercando allo stesso tempo di distribuire il lavoro su tutti i core disponibili.
+
+\section{Contesto applicativo}
+
+Il caso d'uso scelto per valutare \textbf{Goccia} è il sistema di telemetria in tempo reale del prototipo di Formula SAE di SquadraCorse Polito, organizzato secondo un'architettura a più livelli che separa nettamente \emph{ingestion}, \emph{processing}, \emph{storage}, osservabilità e visualizzazione.
+I messaggi provenienti dalle due linee CAN della vettura vengono incapsulati secondo il protocollo Cannelloni, trasportati su datagrammi UDP attraverso una VPN verso un server centrale e quindi elaborati da una pipeline costruita con \textbf{Goccia}, che decodifica i frame CAN e li trasforma in segnali ad alto livello prima della persistenza in un database \emph{time-series} ad alte prestazioni come QuestDB.
+A corredo, il sistema integra un \emph{Observability Layer} basato su OpenTelemetry Collector, Prometheus e Grafana Tempo, e un \emph{Visualization Layer} centrato su Grafana e Caddy, che consentono di monitorare simultaneamente sia lo stato della vettura sia il comportamento interno della pipeline, offrendo un banco di prova realistico per le capacità della libreria.
+
+\section{Obiettivi}
+
+L'obiettivo generale del lavoro è progettare e implementare una libreria per \emph{data pipeline} in Go che renda esplicito il modello a stadi, fornendo un orchestratore centrale e un'interfaccia \texttt{Stage} unificata, con metodi che ne determinano il \emph{lifecycle} (\texttt{Init}, \texttt{Run}, \texttt{Close}), ben definiti e facilmente estendibili.
+Sul piano architetturale, la libreria deve permettere di comporre pipeline costituite da stage di tipo \emph{Ingress}, \emph{Processor} ed \emph{Egress}, collegati tramite un'astrazione, il \emph{Connector}, che incapsula i dettagli delle strutture dati concorrenti, garantendo \emph{thread-safety}, gestione della \emph{backpressure} e terminazione ordinata tramite \texttt{context}.
+Un ulteriore obiettivo è dimostrare che, grazie all'impiego di \emph{ring buffer lock-free} e a scelte implementative orientate alla località dei dati, \textbf{Goccia} è in grado di superare soluzioni basate unicamente sui \emph{channel} standard, riducendo la latenza e aumentando il throughput.
+
+Più in dettaglio, il lavoro si propone di: definire un'API pubblica che consenta di configurare pipeline e stage tramite i tipi \emph{generics} di Go, mantenendo il controllo statico sui tipi dei messaggi lungo la catena di elaborazione, e riducendo la necessità di conversioni dinamiche a runtime.
+In secondo luogo, mira a progettare e implementare diverse famiglie di \emph{Connector} e \emph{ring buffer} interni (SPSC per la comunicazione uno-a-uno tra stage consecutivi, SPMC per il \emph{fan-out} nel \emph{worker pool}, MPSC per il \emph{fan-in}), integrando strategie ibride di \emph{backpressure} che combinano fasi di \emph{spinning} controllato con il blocco su \emph{condition variable} in presenza di contesa prolungata.
+Infine, si pone l'obiettivo di applicare la libreria a un caso reale, la telemetria di SquadraCorse, e offrire altre integrazioni con tecnologie come Kafka, eBPF, QuestDB e OpenTelemetry, al fine di verificarne non solo le prestazioni ma anche la capacità di inserirsi in un ecosistema \emph{cloud-native} complesso.
+
+\section{Contributi principali}
+
+Il primo contributo è la definizione di un modello di pipeline coerente e riusabile in Go, centrato su una struttura ``orchestratrice'' e su stage con responsabilità ben delimitate, classificati in \emph{Ingress}, \emph{Processor} ed \emph{Egress} per riflettere le fasi tipiche dei sistemi di \emph{stream processing}.
+Il secondo contributo è l'introduzione di connettori ad alte prestazioni basati su \emph{ring buffer lock-free}, inclusi adattamenti per \emph{fan-out} e \emph{fan-in} tramite varianti SPMC e MPSC, e con scelte implementative orientate alla scalabilità su architetture multicore (operazioni atomiche, padding per evitare \emph{false sharing}).
+Il terzo contributo è la disponibilità di un'API documentata e riutilizzabile come libreria, pubblicata su GitHub~\cite{goccia:github} e consultabile anche tramite la documentazione di \texttt{pkg.go.dev}~\cite{goccia:pkgdev}.
+Il quarto contributo è la valutazione sperimentale dei connettori interni: i risultati riportati mostrano miglioramenti di latenza e speedup che, a seconda di architettura e pattern di contesa, arrivano tipicamente nell'ordine di circa $1.4\times$--$3.0\times$ rispetto a baseline basate su \emph{channel} in scenari rappresentativi.
+
+\section{Struttura del documento}
+
+Il Capitolo~2 introduce i fondamenti teorici e le tecnologie utilizzate: vengono presentati il linguaggio Go e il suo modello di concorrenza, il paradigma pipeline, le strutture dati \emph{lock-free} e i \emph{ring buffer}, oltre alle tecnologie specifiche del caso d'uso, quali CAN bus, Apache Kafka, eBPF, QuestDB e OpenTelemetry, insieme al metodo di Holt per la correzione del jitter temporale.
+Il Capitolo~3 descrive in dettaglio l'architettura e l'implementazione della libreria \textbf{Goccia}, illustrando la \texttt{struct Pipeline}, l'interfaccia \texttt{Stage}, le categorie di stage (\emph{Ingress}, \emph{Processor}, \emph{Egress}), il \emph{worker pool} e i connettori interni basati su \emph{ring buffer}, con particolare attenzione alle scelte progettuali orientate alle prestazioni e alla gestibilità del ciclo di vita.
+
+Il Capitolo~4 è dedicato ai benchmark della libreria, con la definizione della metodologia sperimentale, l'analisi del comportamento in regime stazionario e sotto contesa, e una discussione architetturale dei risultati ottenuti, mentre il Capitolo~5 presenta l'implementazione completa del sistema di telemetria automobilistica di SquadraCorse, organizzato in \emph{ingestion}, \emph{processing}, \emph{storage}, \emph{observability} e \emph{visualization layer}.
+Il Capitolo~6 illustra possibili sviluppi futuri della libreria, tra cui il supporto a protocolli di trasporto moderni come QUIC e MQTT, pattern avanzati di routing e nuove destinazioni di storage, e il Capitolo~7 conclude il lavoro, sintetizzandone i risultati e delineando le principali direzioni di evoluzione.
