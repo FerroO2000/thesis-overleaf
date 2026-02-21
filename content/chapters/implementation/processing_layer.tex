@@ -5,8 +5,6 @@ Il \textit{Livello di elaborazione} è implementato dal servizio denominato \tex
 
 L’immagine \texttt{scomarferro/sc-telemetry}~\cite{sc-telemetry:dockerhub} incapsula in un unico binario Go l’implementazione necessaria per gestire il flusso di dati proveniente dal veicolo. In fase di avvio, il servizio carica la configurazione leggendo un file YAML (di default \texttt{/app/config/config.yaml}) e applica eventuali override tramite variabili d’ambiente. Il percorso del file di configurazione può essere modificato impostando la variabile \texttt{CONFIG\_PATH}, mentre ogni campo del file YAML può essere sovrascritto da un corrispondente \textit{environment variable}. Questa strategia consente di mantenere una configurazione di base versionata nel repository e, al contempo, di adattare rapidamente i parametri di runtime al contesto specifico senza ricompilare il binario.
 
-<disegno stage pipeline>
-
 La pipeline implementata da \texttt{sc-telemetry} è composta da sei stadi principali:
 \begin{itemize}
   \item \textbf{UDP Ingress}: riceve i datagrammi UDP provenienti dalla scheda SCanner tramite il proxy UDP e li inserisce nella pipeline.
@@ -16,3 +14,10 @@ La pipeline implementata da \texttt{sc-telemetry} è composta da sei stadi princ
   \item \textbf{CAN Message Handler (Custom Processor)}: è l’unico stadio della pipeline implementato specificamente per questa applicazione, e ha il compito di trasformare i messaggi CAN decodificati in messaggi pronti per essere inseriti in QuestDB.
   \item \textbf{QuestDB Egress}: si occupa di inserire i messaggi nel database time-series.
 \end{itemize}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/implementation/pipeline.png}
+  \caption{Stage di Goccia usati in sc-telemetry}
+  \label{fig:sc-telemetry-pipeline}
+\end{figure}

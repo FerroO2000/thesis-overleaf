@@ -6,4 +6,9 @@ In contesti concorrenti, ogni \textit{stage} può operare in parallelo sugli ele
 
 All’interno della libreria \textbf{Goccia}, il concetto di \textit{pipeline} è incarnato dalla struct \texttt{Pipeline}, che funge da orchestratore degli \textit{stage} e rappresenta il punto di ingresso per l’utilizzo della libreria stessa. Questa struct definisce i tre metodi principali che ogni \textit{stage} deve implementare: \texttt{Init}, \texttt{Run} e \texttt{Close}, corrispondenti alle diverse fasi del ciclo di vita della pipeline (si veda la sezione successiva per ulteriori dettagli). Inoltre, il metodo \texttt{AddStage} consente di aggiungere nuovi \textit{stage} fintanto che la pipeline non è in esecuzione.
 
-<disegno pipeline>
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/library_architecture/pipeline.png}
+  \caption{Struttura generale di una pipeline in Goccia}
+  \label{fig:pipeline}
+\end{figure}

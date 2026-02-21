@@ -12,8 +12,6 @@ Lo Scaler rappresenta il componente responsabile dell'adattamento dinamico del n
 
 Infine, i Worker sono le unità di elaborazione effettive che estraggono task dalla coda di fan-out, invocano la logica specifica di uno stage, e depositano i risultati nella coda di fan-in.
 
-<disegno fan-in/out scaler worker>
-
 Lo Scaler implementa un algoritmo di autoscaling adattivo che regola dinamicamente il numero di worker attivi in funzione della profondità della coda di ingresso. La logica di scaling è incapsulata nella struct \texttt{Scaler}, definita nel package \texttt{internal/pool/scaler}. Il parametro critico è \texttt{QueueDepthPerWorker} (default 64), che rappresenta il numero target di task in coda per ciascun worker. Se il rapporto tra il numero di task pendenti e il numero di worker correnti supera questa soglia, lo scaler decide di incrementare il numero di worker.
 
 La decisione di scaling è presa periodicamente, con un intervallo configurabile tramite \texttt{AutoScaleInterval} (default 3 secondi). Durante ogni ciclo di valutazione, lo scaler calcola il numero ottimale di worker tramite la formula. Il numero di worker è vincolato dai limiti \texttt{MinWorkers} (default 1) e \texttt{MaxWorkers} (default \texttt{runtime.NumCPU}).
@@ -21,6 +19,13 @@ La decisione di scaling è presa periodicamente, con un intervallo configurabile
 Per quanto riguarda la riduzione del numero di worker (scale-down), lo scaler implementa un meccanismo di exponential backoff. Quando viene rilevata la necessità di ridurre il numero di worker, il parametro \texttt{ScaleDownFactor} (default 0.1) determina la frazione di worker da rimuovere, mentre il parametro \texttt{ScaleDownBackoff} (default 1.5) controlla il fattore di incremento esponenziale del tempo di attesa tra riduzioni consecutive. Questo meccanismo previene oscillazioni eccessive del numero di worker in presenza di carichi fluttuanti, garantendo stabilità operativa.
 
 Lo Scaler notifica il Worker Pool tramite due canali, uno per segnalare la necessità di creare e far partire un nuovo Worker, e l'altro per terminarlo.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/library_architecture/worker_pool.png}
+  \caption{Worker Pool nella libreria Goccia}
+  \label{fig:worker-pool}
+\end{figure}
 
 Il Worker Pool espone molteplici metriche per monitorare lo stato operativo e identificare eventuali colli di bottiglia. Le metriche principali includono il numero di task pendenti nella coda di fan-out e il numero di worker attivi.
 
