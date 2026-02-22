@@ -22,7 +22,12 @@ Infine, il parametro \texttt{OutputQueueSize} specifica la dimensione della coda
 
 Il \textit{TCP stage} implementa un'architettura basata su molteplici goroutine sincronizzate. Il ciclo principale si occupa di accettare nuove connessioni tramite il metodo \texttt{Accept} del \textit{listener} \textit{TCP}~\cite{go:net:tcplistener:accept} e, per ciascuna nuova connessione in ingresso, avvia una nuova goroutine dedicata alla gestione della relativa comunicazione. In questo modo, si ottiene un pattern di \textit{fan-out}, in cui una singola goroutine principale genera $N$ goroutine worker, una per ogni connessione cliente.
 
-<disegno singola goroutine che genera N goroutine per N connessioni>
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/library_architecture/tcp_ingress.png}
+  \caption{Gestione connessioni nello stage TCP Ingress}
+  \label{fig:tcp-ingress}
+\end{figure}
 
 Questa architettura è resa possibile dal \textit{runtime} di Go, il quale è in grado di gestire un numero elevato di goroutine e di schedularle efficientemente su un numero finito di thread del sistema operativo.
 

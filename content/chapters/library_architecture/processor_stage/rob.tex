@@ -4,7 +4,12 @@ Lo \textit{Reorder Buffer} (ROB) \textit{stage} è specializzato nel riordinamen
 
 Il cuore del ROB è un'architettura \textit{dual-buffer}: il \texttt{primary buffer} e l'\texttt{auxiliary buffer}. Il \texttt{primary buffer} è più piccolo ed è ottimizzato per il caso comune dove i messaggi arrivano in ordine o con ritardi brevi. L'\texttt{auxiliary buffer} è più grande e accoglie messaggi che arrivano molto fuori ordine. I due buffer operano in tandem: quando l'\texttt{auxiliary buffer} raggiunge un certo livello di pienezza (configurabile tramite \texttt{FlushTreshold}, \textit{default} 30\%), il \texttt{primary buffer} è interamente liberato nel connettore di output e il contenuto dell'\texttt{auxiliary buffer} è trasferito nel \texttt{primary buffer}.
 
-<disegno schema doppio ring buffer>
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/library_architecture/rob.png}
+  \caption{Schema dell'architettura dual-buffer dello stage ROB}
+  \label{fig:rob}
+\end{figure}
 
 Quando un messaggio arriva allo \textit{stage}, viene passato al ROB tramite il metodo \texttt{Enqueue}. Il ROB classifica il risultato dell'operazione di enqueue in una di quattro categorie:
 

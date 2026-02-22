@@ -10,8 +10,6 @@ Il parametro \texttt{ForceReRead} (default \texttt{false}) controlla il comporta
 
 Lo \textit{File stage} implementa un'architettura distribuita basata su molteplici \textit{reader}, uno per ogni file in lettura. Ogni \textit{reader} è eseguito su una goroutine dedicata e comunica tramite una coda condivisa (\textit{fan-in}) con il \textit{bridge}, una goroutine ausiliaria responsabile di inoltrare i messaggi al \textit{connector} di uscita. Questo design consente di leggere parallelamente da molteplici file, mentre la sincronizzazione tramite \textit{fan-in} garantisce un ordinamento coerente dei messaggi verso il resto della \textit{pipeline}.
 
-<disegno stage, reader, fan-in>
-
 Lo \textit{stage} mantiene una mappa di \textit{reader} attivi (\texttt{readers}) e monitora continuamente la directory tramite \texttt{fsnotify.Watcher}~\cite{fsnotify:watcher}. Quando \textit{fsnotify} segnala un evento (creazione, modifica, rimozione di file), viene determinata l'azione appropriata: se il file è stato creato o modificato, il lettore è avviato (oppure creato e avviato se non esiste già); se il file è stato eliminato o rinominato, il lettore è chiuso e rimosso dalla mappa. La lettura iniziale dei file preesistenti avviene in \texttt{readExistingFiles}, una routine che scansiona le directory configurate e avvia i \textit{reader} per tutti i file già presenti, poiché \textit{fsnotify} non genera eventi per file che esistevano prima dell'inizio del monitoraggio.
 
 \begin{lstlisting}[language=Go, caption={Ciclo principale del File stage (ingress/file.go, metodo run)}]
