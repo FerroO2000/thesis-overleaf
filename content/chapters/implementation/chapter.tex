@@ -24,7 +24,12 @@ Dal punto di vista logico, l’architettura è suddivisa in cinque layer princip
   Espone in modo sicuro agli utenti (tramite dashboard e interfacce web) sia i dati di telemetria persistiti sia i segnali di osservabilità, fungendo da punto di accesso unificato per l’analisi in tempo reale e post.
 \end{description}
 
-<disegno architettura generale>
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/implementation/architecture.png}
+  \caption{Schema dell'architettura del sistema di telemetria}
+  \label{fig:telemetry-architecture}
+\end{figure}
 
 \include{content/chapters/implementation/ingestion_layer}
 \include{content/chapters/implementation/processing_layer}
