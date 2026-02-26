@@ -8,5 +8,9 @@ La logica di lettura dello \textit{stage} è volutamente semplice: il cuore dell
 
 Dal punto di vista dell'osservabilità, oltre alle metriche comuni a tutti gli \textit{Ingress stage} (numero di messaggi e byte ricevuti), il \textit{Kafka stage} introduce la possibilità di estrarre il contesto di \textit{tracing} direttamente dagli \textit{header} del messaggio \textit{Kafka}. A tale scopo viene utilizzata una struttura dedicata che implementa l'interfaccia \textit{TextMapPropagator} definita dallo standard \textit{OpenTelemetry}~\cite{otel:textmap:propagator}. Questo meccanismo consente di propagare i \textit{trace} tra servizi differenti, permettendo la costruzione di un sistema di \textit{tracing} distribuito in cui ogni messaggio \textit{Kafka} può trasportare il contesto di esecuzione end-to-end lungo l'intera pipeline.
 
-<disegno screenshot trace distribuito>
-
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/library_architecture/distributed_trace.png}
+  \caption{Esempio di trace distribuito tra due servizi che comunicano tramite Kafka. Visualizzazione realizzata con Grafana}
+  \label{fig:distributed-trace}
+\end{figure}
