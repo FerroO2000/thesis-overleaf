@@ -52,10 +52,12 @@
 
 \frontmatter % not strictly needed, as toptesi takes care of it already
 
+\input{content/notes}
+
 % abstract if needed
-% \begin{abstract}
-%     \input{content/abstract.tex}
-% \end{abstract}
+\begin{abstract}
+    \input{content/abstract.tex}
+\end{abstract}
 
 % to create blank pages for openright in frontmatter
 % use one of the following two methods
@@ -67,12 +69,12 @@
 \paginavuota % to manually create a blank page
 
 % summary (uncomment until "end summary" if needed)
-\sommario
-\input{content/summary}
+% \sommario
+% \input{content/summary}
 
-\phantom{0}
-\cleardoublepage
-\thispagestyle{empty}
+% \phantom{0}
+% \cleardoublepage
+% \thispagestyle{empty}
 % end summary
 
 \ringraziamenti % acknowledgements
@@ -112,7 +114,7 @@
 \input{content/chapters/benchmarks/chapter}
 \input{content/chapters/implementation/chapter}
 \input{content/chapters/future/chapter}
-\input{content/chapters/chapter7}
+\input{content/chapters/conclusion}
 
 % \paginavuota % it works even without stile=classica
 
